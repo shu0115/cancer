@@ -1,0 +1,40 @@
+
+<% unless @user.blank? %>
+<table>
+  <tr>
+    <td>
+      <b>ログインID：</b>
+      <%=h @user.login_id %>
+    </td>
+  </tr>
+    
+  <tr>
+    <td>
+      <b>表示名：</b>
+      <%=h @user.display_name %>
+    </td>
+  </tr>
+
+<% if false %>
+  <tr>
+    <td>
+      <b>Twitter ID：</b>
+      <%=h @user.twitter_id %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<span class="menu">
+  <%= link_to t("menu.top"), :root %>
+  <%= link_to t("menu.edit"), { :action => "edit", :id => @user.id } %>
+</span>
+
+<br />
+<% else %>
+  <span class="menu">
+    <%= link_to t("menu.top"), :root %>
+  </span>
+<% end %>

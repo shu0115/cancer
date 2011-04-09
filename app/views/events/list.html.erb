@@ -1,0 +1,40 @@
+<%# ページング %>
+<%= will_paginate @events, :previous_label => 'Prev', :next_label => 'Next', :params => { :action => "list", :search => @search } %>
+
+<table>
+  <tr>
+    <th><%= t("event.title") %></th>
+    <th><%= t("event.event_day") %></th>
+    <th><%= t("event.user") %></th>
+    <th><%= t("event.mode") %></th>
+  </tr>
+
+<% unless @events.blank? %>
+	<% @events.each{ |event| %>
+	  <tr>
+	    <td><%=h event.title %></td>
+	    <td><%= Schedule.schedule_day_format(event.event_day) %></td>
+	    <td><%= User.get_display_name(event.user_id) %></td>
+	    <td><%=h $mode[event.mode] %></td>
+	    <td class="menu"><%= link_to t("schedule.table"), :controller => "schedules", :action => "table", :id => event.id %></td>
+      <%# イベントの作成ユーザであれば  %>
+      <%# if session[:user_id] == event.user_id %>
+  	    <td class="menu"><%= link_to t("schedule.day"), :controller => "schedules", :action => "list", :id => event.id %></td>
+  	    <td class="menu"><%= link_to t("menu.show"), :action => "show", :id => event.id %></td>
+  	    <td class="menu"><%= link_to t("menu.edit"), :action => "edit", :id => event.id %></td>
+  	    <td class="menu"><%= link_to t("menu.delete"), { :action => "destroy", :id => event.id }, :confirm => "本当に削除してよろしいですか？" %></td>
+	    <%# end %>
+	  </tr>
+	<% } %>
+<% end %>
+</table>
+
+<%# ページング %>
+<%= will_paginate @events, :previous_label => 'Prev', :next_label => 'Next', :params => { :action => "list", :search => @search } %>
+
+<br />
+<br />
+
+<span class="menu"><%= link_to t("menu.new"), :action => "new" %></span><br />
+
+<br />

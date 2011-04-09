@@ -1,0 +1,28 @@
+.event_day {
+  background: #cfffcf;
+}
+
+.text_field_100 {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border: 1px solid #aaa;
+  padding: 5px;
+  width: 100px;
+}
+
+.text_field_150 {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border: 1px solid #aaa;
+  padding: 5px;
+  width: 150px;
+}
+
+.text_left {
+  text-align: left;
+}
+
+.width_60 {
+  text-align: center;
+  width: 60px;
+}

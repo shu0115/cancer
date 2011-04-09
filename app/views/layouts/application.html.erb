@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title><%= t("menu.title") %></title>
+  <%= stylesheet_link_tag 'base' %>
+  <%= stylesheet_link_tag 'base_override' %>
+  <%=javascript_include_tag :defaults %>
+</head>
+
+<body>
+
+<div class="page_box">
+  
+<%# ヘッダメニュー %>
+<span class="header_menu menu">
+  <% if session[:user_id].blank? %>
+    <% unless params[:controller] == "entry" and ( params[:action] == "login" or params[:action] == "input" or params[:action] == "confirmation" ) %>
+      <%# ログイン前 %>
+      <%= link_to "Entry", { :controller => "entry", :action => "input" } %>
+      <% form_tag :controller => "entry", :action => "login" do %>
+        <span class="input_field_width_100">
+          ID:<input type="text" name="login[login_id]" size="15" />
+          PASS:<input type="password" name="login[password]" size="7" />
+        </span>
+        <input type="hidden" name="request_url" value="<%= request.url %>" />
+        <%= submit_tag "ログイン", :disable_with => "ログイン" %>
+      <% end %>
+    <% else %>
+      <br />
+    <% end %>
+  <% else %>
+    <%# ログイン後 %>
+    <%#= session[:user_id] %>
+    <%#= session[:login_id] %>
+    <%= session[:display_name] %>：
+    <%= link_to "Public", { :controller => "public", :action => "list" } %>
+    <%= link_to "Protect", { :controller => "protect", :action => "list" } %>
+    <%= link_to "Event", { :controller => "events", :action => "list" } %>
+    <%= link_to "Profile", { :controller => "entry", :action => "show", :id => session[:user_id] } %>
+    <% form_tag :controller => "entry", :action => "logout", :method => "put" do %>
+      <input type="hidden" name="request_url" value="<%= request.url %>" />
+      <%= submit_tag "ログアウト", :disable_with => "ログアウト" %>
+    <% end %>
+  <% end %>
+</span>  
+  
+<%# タイトル %>
+<span id="title">
+<% if session[:user_id].blank? %>
+  <%# ログイン前 %>
+  <%= link_to t("menu.title"), :controller => "entry", :action => "login" %>
+<% else %>
+  <%# ログイン後 %>
+  <%= link_to t("menu.title"), root_path %>
+<% end %>
+</span>
+
+<br />
+<br />
+
+<p style="color: green"><%= flash[:notice] %></p>
+
+<%= yield %>
+<br />
+
+</div>
+
+</body>
+
+</html>

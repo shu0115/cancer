@@ -1,0 +1,34 @@
+
+<% unless @schedule.blank? %>
+  <% form_for @schedule, :url =>{ :action => "update", :id => @schedule.id, :event_id => @schedule.event_id } do |f| %>
+    <%= f.error_messages %>
+  
+    <%= f.label :event_id, t("event.title") %>：
+    <%= Event.get_title(@schedule.event_id) %><br />
+    
+    <br />
+  
+    <%= f.label :schedule_day, t("schedule.day") %>：
+    <%= f.date_select :schedule_day, :use_month_numbers => true %><br />
+    
+    <br />
+
+    <%= f.submit "保存", :disable_with => "保存" %><br />
+  
+  <% end %>
+  
+  <br />
+  <br />
+  
+  <span class="menu">
+    <%= link_to t("menu.top"), :root %>
+    <%= link_to t("menu.list"), { :action => "list", :id => @schedule.event_id } %>
+    <%= link_to t("menu.show"), { :action => :show, :id => @schedule.event_id } %>
+  </span>
+  
+  <br />
+<% else %>
+  <span class="menu">
+    <%= link_to t("menu.top"), :root %>
+  </span>
+<% end %>

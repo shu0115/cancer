@@ -1,0 +1,26 @@
+
+<% form_for @schedule, :url =>{ :action => "create", :id => @event_id } do |f| %>
+  <%= f.error_messages %>
+
+    <%= Event.get_title(@event_id) %><br />
+    
+    <br />
+  
+  <%= f.label :schedule_day, t("schedule.day") %>：
+  <%= f.date_select :schedule_day, :use_month_numbers => true %><br />
+
+  <br />
+
+  <%= f.submit "作成", :disable_with => "作成" %><br />
+
+<% end %>
+
+<br />
+<br />
+
+<span class="menu">
+  <%#= link_to t("menu.top"), :root %>
+  <%= link_to t("menu.list"), { :action => "list", :id => @event_id } %>
+</span>
+
+<br />

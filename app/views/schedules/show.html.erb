@@ -1,0 +1,32 @@
+
+<% unless @schedule.blank? %>
+  <table>
+    <tr>
+      <td>
+        <b><%= t("event.title") %>:</b>
+        <%= Event.get_title(@schedule.event_id) %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <b><%= t("schedule.day") %>:</b>
+        <%= Schedule.schedule_day_format(@schedule.schedule_day) %>
+      </td>
+    </tr>
+  </table>
+  
+  <br />
+  
+  <span class="menu">
+    <%= link_to t("menu.top"), :root %>
+    <%= link_to t("menu.list"), { :action => "list", :id => @schedule.event_id } %>
+    <%= link_to t("menu.edit"), { :action => "edit", :id => @schedule.id } %>
+  </span>
+  
+  <br />
+<% else %>
+  <span class="menu">
+    <%= link_to t("menu.top"), :root %>
+  </span>
+<% end %>

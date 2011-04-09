@@ -1,0 +1,29 @@
+
+<%= Event.get_title(@event_id) %>：<br />
+
+<%# 予定日リスト %>
+<table>
+  <tr>
+    <th><%= t("schedule.day") %></th>
+  </tr>
+
+<% unless @schedules.blank? %>
+	<% @schedules.each{ |schedule| %>
+  <tr>
+    <td><%= Schedule.schedule_day_format(schedule.schedule_day) %></td>
+    <td class="menu"><%= link_to t("menu.show"), :action => "show", :id => schedule.id %></td>
+    <td class="menu"><%= link_to t("menu.edit"), :action => "edit", :id => schedule.id %></td>
+    <td class="menu"><%= link_to t("menu.delete"), { :action => "destroy", :id => schedule.id, :event_id => @event_id }, :confirm => "本当に削除してよろしいですか？" %></td>
+  </tr>
+	<% } %>
+<% end %>
+</table>
+
+<br />
+
+<span class="menu">
+  <%= link_to t("menu.list"), :controller => "events", :action => :list %>
+  <%= link_to t("menu.new"), :action => "new", :id => @event_id %>
+</span>
+
+<br />

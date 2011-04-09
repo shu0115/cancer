@@ -1,0 +1,12 @@
+
+<td><%= User.get_display_name(session[:user_id]) %></td>
+
+<%# 参加予定 %>
+<% @schedules.each{ |schedule| %>
+  <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+  <td align="center" class="<%= set_class %>"><%= select( "entry", schedule.schedule_day, $entry_attend, { :selected => @attend_hash[schedule.schedule_day] } )%></td>
+<% } %>
+
+<td class="width_60">
+  <%= button_to_remote '保存', :update => "entry_table", :submit => "entry_#{params[:index]}", :url => { :action => 'entry_update', :id => @event.id, :index => params[:index] } %>
+</td>

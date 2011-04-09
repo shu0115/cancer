@@ -1,0 +1,28 @@
+<%# ページング %>
+<%= will_paginate @events, :previous_label => 'Prev', :next_label => 'Next', :params => { :action => "list", :search => @search } %>
+
+<table>
+  <tr>
+    <th><%= t("event.title") %></th>
+    <th><%= t("event.event_day") %></th>
+    <th><%= t("event.user") %></th>
+    <th><%= t("event.mode") %></th>
+  </tr>
+
+<% unless @events.blank? %>
+	<% @events.each{ |event| %>
+	  <tr>
+	    <td><%=h event.title %></td>
+	    <td><%= Schedule.schedule_day_format(event.event_day) %></td>
+	    <td><%= User.get_display_name(event.user_id) %></td>
+	    <td><%=h $mode[event.mode] %></td>
+	    <td class="menu"><%= link_to t("schedule.table"), :action => "table", :id => event.id %></td>
+	  </tr>
+	<% } %>
+<% end %>
+</table>
+
+<%# ページング %>
+<%= will_paginate @events, :previous_label => 'Prev', :next_label => 'Next', :params => { :action => "list", :search => @search } %>
+
+<br />

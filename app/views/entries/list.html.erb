@@ -1,0 +1,32 @@
+<h1>Listing entries</h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Schedule day</th>
+    <th>Attend</th>
+    <th>Event</th>
+    <th>User</th>
+  </tr>
+
+<% unless @entries.blank? %>
+	<% @entries.each{ |entry| %>
+  <tr>
+    <td><%=h entry.id %></td>
+    <td><%=h entry.name %></td>
+    <td><%=h entry.schedule_day %></td>
+    <td><%=h entry.attend %></td>
+    <td><%=h entry.event_id %></td>
+    <td><%=h entry.user_id %></td>
+    <td><%= link_to '閲覧', :action => "show", :id => entry.id %></td>
+    <td><%= link_to '編集', :action => "edit", :id => entry.id %></td>
+    <td><%= link_to '削除', { :action => "destroy", :id => entry.id }, :confirm => "本当に削除してよろしいですか？" %></td>
+  </tr>
+	<% } %>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to '新規作成', :action => "new" %>

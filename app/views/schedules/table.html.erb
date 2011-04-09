@@ -1,0 +1,129 @@
+
+<table class="text_left">
+  <tr>
+    <th><%= t("event.title") %></th>
+    <td><%= @event.title %></td>
+  </tr>
+
+  <tr>
+    <th><%= t("event.event_day") %></th>
+    <td><%= Schedule.schedule_day_format(@event.event_day) %></td>
+  </tr>
+
+  <tr>
+    <th><%= t("event.mode") %></th>
+    <td><%= $mode[@event.mode] %><% if @event.mode == "protect" %><%= "(閲覧キー:#{@event.show_key})" unless @event.show_key.blank? %><% end %></td>
+  </tr>
+
+  <tr>
+    <th><%= t("event.note") %></th>
+    <td><%= @event.note %></td>
+  </tr>
+<table>
+
+<br />
+
+<% if @event.mode == "public" or @event.mode == "protect" %>
+<table class="text_left">
+  <tr>
+    <th>公開用ページ</th>
+    <td>
+      <%= link_to "http://#{request.env['HTTP_HOST']}/#{@event.mode}/table/#{@event.id}", "http://#{request.env['HTTP_HOST']}/#{@event.mode}/table/#{@event.id}", :target => "_blank" %><br />
+    </td>
+  </tr>
+<table>
+
+<br />
+<% end %>
+
+<%= render :partial => "entry_table" %>
+
+<br />
+
+<% if false %>
+<%# フォーム %>
+<% form_tag :action => "entry_update" do %>
+
+<table>
+  <% unless @schedules.blank? %>
+    <tr>
+      <th><%= t("event.entry_name") %></th>
+      
+      <%# 予定日 %>
+  		<% @schedules.each{ |schedule| %>
+        <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+        <th class="<%= set_class %>">
+          <% if @event.user_id == session[:user_id] %>
+            <% if @event.event_day == schedule.schedule_day %>
+              <%#= link_to Schedule.schedule_day_format(schedule.schedule_day), { :action => "set_event_day", :id => @event.id, :schedule_day => "" }, :confirm => "開催日をリセットします。" %>
+              <%= link_to Schedule.schedule_day_format(schedule.schedule_day), { :action => "set_event_day", :id => @event.id, :schedule_day => "" } %>
+            <% else %>
+              <%#= link_to Schedule.schedule_day_format(schedule.schedule_day), { :action => "set_event_day", :id => @event.id, :schedule_day => schedule.schedule_day }, :confirm => "#{Schedule.schedule_day_format(schedule.schedule_day)}を開催日に設定します。" %>
+              <%= link_to Schedule.schedule_day_format(schedule.schedule_day), { :action => "set_event_day", :id => @event.id, :schedule_day => schedule.schedule_day } %>
+            <% end %>
+          <% else %>
+            <%= Schedule.schedule_day_format(schedule.schedule_day) %>
+          <% end %>
+        </th>
+      <% } %>
+    </tr>
+
+    <% @entry_user.each_with_index{ |entry, index| %>
+      <tr id="entry_<%= index %>">
+        <td><%= User.get_display_name(entry.user_id) %></td>
+      
+        <%# 参加予定 %>
+        <% @schedules.each{ |schedule| %>
+        <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+          <td align="center" class="<%= set_class %>"><%= @entry_hash[entry.user_id][schedule.schedule_day] %></td>
+        <% } %>
+        
+        <%# ログインユーザと参加者が等しければ %>
+        <% if session[:user_id] == entry.user_id %>
+          <td class="menu"><%= link_to_remote( t("menu.edit"), :update => "entry_#{index}", :url =>{ :action => :entry_edit, :event_id => @args[:event_id], :user_id => entry.user_id }) %></td>
+        <% end %>
+      </tr>
+    <% } %>
+
+    <%# 参加ユーザの中にログインユーザがいなければ %>
+    <% unless @entry_hash.key?( session[:user_id] ) %>
+      <tr id="entry_new">
+        <%# 参加予定 新規作成 %>
+        <td align="center" class="menu"><%= link_to_remote( t("menu.new"), :update => "entry_new", :url =>{ :action => :entry_new, :event_id => @args[:event_id], :user_id => session[:user_id] }) %></td>
+
+        <%# 参加予定 %>
+    		<% @schedules.each{ |schedule| %>
+          <td align="center"><br /></td>
+        <% } %>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td><br /></td>
+      <% @schedules.each{ |schedule| %>
+        <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+        <td align="center" class="<%= set_class %>">
+          ○ <%= "%.0f"%Utility.f_round( :number => (@count_hash[schedule.schedule_day][:circle_rate].to_f * 100), :precision => 2 ) %>%<br />
+          △ <%= "%.0f"%Utility.f_round( :number => (@count_hash[schedule.schedule_day][:triangle_rate].to_f * 100), :precision => 2 ) %>%<br />
+          × <%= "%.0f"%Utility.f_round( :number => (@count_hash[schedule.schedule_day][:bad_rate].to_f * 100), :precision => 2 ) %>%<br />
+        </td>
+      <% } %>
+    </tr>
+
+  <% else %>
+    <tr>
+      <td><%= t("schedule.day") %>を作成して下さい。</td>
+    </tr>
+	<% end %>
+</table>
+
+<% end %>
+<%# / フォーム %>
+<% end %>
+
+<span class="menu">
+  <%= link_to t("menu.list"), :controller => "events", :action => :list %>
+</span>
+
+<br />
+  

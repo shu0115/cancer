@@ -1,0 +1,80 @@
+
+<%# 参加予定テーブル %>
+<table border="0" id="entry_table">
+  <% unless @schedules.blank? %>
+    <tr>
+      <%# 参加者名 %>
+      <th><%= t("event.entry_name") %></th>
+      
+      <%# 予定日 %>
+  		<% @schedules.each{ |schedule| %>
+        <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+        <th class="<%= set_class %>">
+          <%= Schedule.schedule_day_format(schedule.schedule_day) %>
+        </th>
+      <% } %>
+      <th><br /></th>
+    </tr>
+
+    <% next_index = 0 %>
+
+    <%# 参加予定リスト %>
+    <% @entry_user.each_with_index{ |entry, index| %>
+      <tr id="entry_<%= index %>">
+        <%# 参加者名 %>
+        <td><%= User.get_display_name(entry.user_id) %></td>
+      
+        <%# 参加予定 %>
+        <% @schedules.each{ |schedule| %>
+          <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+          <td align="center" class="<%= set_class %>"><%= @entry_hash[entry.user_id][schedule.schedule_day] %></td>
+        <% } %>
+          
+        <%# ログインユーザと参加者が等しければ %>
+        <% if session[:user_id] == entry.user_id %>
+          <%# Editボタン %>
+          <td class="menu width_60">
+            <%= link_to_remote( t("menu.edit"), :update => "entry_#{index}", :url =>{ :action => "entry_edit", :id => @event.id, :index => index }) %>
+          </td>
+        <% end %>
+      </tr>
+      <% next_index = index + 1 %>
+    <% } %>
+
+    <%# 参加ユーザの中にログインユーザがいなければ %>
+    <% unless @entry_hash.key?( session[:user_id] ) %>
+      <tr id="entry_<%= next_index %>">
+        <td><br /></td>
+
+        <%# 参加予定 %>
+    		<% @schedules.each{ |schedule| %>
+            <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+          <td align="center" class="<%= set_class %>"><br /></td>
+        <% } %>
+        
+        <%# Newボタン %>
+        <td align="center" class="menu width_60">
+          <%= link_to_remote( t("menu.new"), :update => "entry_#{next_index}", :url =>{ :action => :entry_new, :id => @event.id, :index => next_index }) %>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th>参加率</th>
+      <% @schedules.each{ |schedule| %>
+        <% set_class = "event_day" if @event.event_day == schedule.schedule_day %>
+        <td align="center" class="<%= set_class %>">
+          ○ <%= "%.0f"%Utility.f_round( :number => (@count_hash[schedule.schedule_day][:circle_rate].to_f * 100), :precision => 2 ) %>%<br />
+          △ <%= "%.0f"%Utility.f_round( :number => (@count_hash[schedule.schedule_day][:triangle_rate].to_f * 100), :precision => 2 ) %>%<br />
+          × <%= "%.0f"%Utility.f_round( :number => (@count_hash[schedule.schedule_day][:bad_rate].to_f * 100), :precision => 2 ) %>%<br />
+        </td>
+      <% } %>
+      <td><br /></td>
+    </tr>
+
+  <% else %>
+    <tr>
+      <td><%= t("schedule.day") %>を作成して下さい。</td>
+    </tr>
+	<% end %>
+</table>

@@ -1,0 +1,54 @@
+
+<% unless @event.blank? %>
+  <table>
+    <tr>
+      <td>
+        <b>タイトル:</b>
+        <%=h @event.title %>
+      </td>
+    </tr>
+    
+<% if false %>
+    <tr>
+      <td>
+        <b>開催日:</b>
+        <%=h Schedule.schedule_day_format(@event.event_day) %>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        <b>作成者:</b>
+        <%=h User.get_display_name(@event.user_id) %>
+      </td>
+    </tr>
+<% end %>
+
+    <tr>
+      <td>
+        <b>モード:</b>
+        <%=h $mode[@event.mode] %><% if @event.mode == "protect" %><%= "(閲覧キー:#{@event.show_key})" unless @event.show_key.blank? %><% end %>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>
+        <b>備考:</b>
+        <%=h @event.note %>
+      </td>
+    </tr>
+  </table>
+  
+  <br />
+  
+  <span class="menu">
+    <%= link_to t("menu.list"), :action => :list %>
+    <%= link_to t("menu.edit"), { :action => "edit", :id => @event.id } %>
+  </span>
+  
+  <br />
+<% else %>
+  <span class="menu">
+    <%= link_to t("menu.list"), :action => :list %>
+  </span>
+<% end %>

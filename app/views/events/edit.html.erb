@@ -1,0 +1,39 @@
+
+<% unless @event.blank? %>
+  <% form_for @event, :url => { :action => "update", :id => @event.id } do |f| %>
+    <%= f.error_messages %>
+  
+    <%= f.label :title, "タイトル" %>：<br />
+    <%= f.text_field :title, :class => "text_field" %><br />
+    
+    <br />
+  
+    <%= f.label :mode, "モード" %>：<br />
+    <%= f.radio_button :mode , "public" %><%= f.label :mode_public, " 公開" %>
+    <%= f.radio_button :mode , "private" %><%= f.label :mode_private, " 非公開" %>
+    <%= f.radio_button :mode , "protect" %><%= f.label :mode_protect, " 保護" %>：<%= f.label :show_key, "閲覧キー" %> <%= f.text_field :show_key, :class => "text_field_100" %><br />
+    
+    <br />
+  
+    <%= f.label :note, "備考" %>：<br />
+    <%= f.text_area :note %><br />
+    
+    <br />
+  
+    <%= f.submit "保存", :disable_with => "保存" %><br />
+  
+  <% end %>
+  
+  <br />
+  
+  <span class="menu">
+    <%= link_to t("menu.list"), :action => :list %>
+    <%= link_to t("menu.show"), { :action => :show, :id => @event.id } %>
+  </span>
+  
+  <br />
+<% else %>
+  <span class="menu">
+    <%= link_to t("menu.list"), :action => :list %>
+  </span>
+<% end %>

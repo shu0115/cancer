@@ -1,0 +1,34 @@
+
+<center>
+<%# イベント情報 %>
+<table align="center" class="text_left">
+  <tr>
+    <th><%= t("event.title") %></th>
+    <td><%= @event.title %></td>
+  </tr>
+
+  <tr>
+    <th><%= t("event.event_day") %></th>
+    <td><%= Schedule.schedule_day_format(@event.event_day) %></td>
+  </tr>
+
+  <tr>
+    <th><%= t("event.note") %></th>
+    <td><%= @event.note %></td>
+  </tr>
+<table>
+
+<br />
+
+<p style="color: green"><%= flash[:show_key_notice] %></p>
+
+<% form_tag :action => "show_key", :id => @event.id do %>
+  閲覧キーを入力して下さい。<br />
+  <br />
+  <%= password_field_tag :show_key, params[:show_key], :class => "text_field_150" %><br />
+  <br />
+  <%= submit_tag "送信", :disable_with => "送信" %><br />
+<% end %>
+
+<br />
+</center>

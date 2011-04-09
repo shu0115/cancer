@@ -10,10 +10,12 @@
 
   <%= f.label :display_name, "表示名" %>：<%= @user.display_name %>
   <%= f.hidden_field :display_name, :value => @user.display_name %><br />
-  
+
+<% if false %>
   <%= f.label :twitter_id, "Twitter ID" %>：<%= @user.twitter_id %>
   <%= f.hidden_field :twitter_id, :value => @user.twitter_id %><br />
-  
+<% end %>
+
   <br />
 
   <%= f.submit '登録' %>

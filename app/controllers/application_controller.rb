@@ -9,11 +9,19 @@ class ApplicationController < ActionController::Base
   # filter_parameter_logging :password
   
   before_filter :authorize
+  before_filter :ssl_redirect
 
   PER_PAGE = 15
   $entry_attend = [ "-", "○", "△", "×" ]
   $day_week = { "0" => "日", "1" => "月", "2" => "火", "3" => "水", "4" => "木", "5" => "金", "6" => "土" }
   $mode = { "public" => "公開", "private" => "非公開", "protect" => "保護" }
+
+  # ログインプロトコル
+  if Rails.env.production?
+    $login_protocol = "https"
+  else
+    $login_protocol = "http"
+  end
 
   private
   #-----------#
@@ -37,6 +45,20 @@ class ApplicationController < ActionController::Base
         flash[:login_notice] = "ログインが必要です。<br /><br />"
         redirect_to :controller => "entry", :action => "login" and return
       end
+    end
+  end
+
+  #--------------#
+  # ssl_redirect #
+  #--------------#
+  def ssl_redirect
+    # httpへリダイレクト
+    if Rails.env.production? and request.env["HTTP_X_FORWARDED_PROTO"].to_s == "https" and params[:controller] == "public"
+      request.env["HTTP_X_FORWARDED_PROTO"] = "http"
+      redirect_to request.url and return
+    elsif Rails.env.production? and request.env["HTTP_X_FORWARDED_PROTO"].to_s != "https" and params[:controller] != "public"
+      request.env["HTTP_X_FORWARDED_PROTO"] = "https"
+      redirect_to request.url and return
     end
   end
 

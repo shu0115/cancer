@@ -1,0 +1,14 @@
+= Cancer
+
+Schedule adjust App.
+
+= Heroku Setup
+
+  $ git clone git@github.com:shu0115/cancer.git
+  $ cd cancer
+  $ heroku create YOUR-APP-NAME
+  $ git push heroku master
+
+= Copyright
+
+Copyright (c) 2011 Shun Matsumoto.
